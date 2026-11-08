@@ -71,3 +71,47 @@ deploy:
           cache-from: type=registry,ref=dbal7/fais601_m10:cache
           ...
 ```
+
+# Testing with pgAdmin and PostreSQL
+
+## Accessing pgAdmin
+
+### Compose the image
+
+**Terminated any running images**
+```bash
+docker compose down
+```
+
+**Composed the image**
+```bash
+docker compose up -d
+```
+
+### Open localhost:5050
+
+*Used following command to check running images and names*
+```bash 
+docker compose ps
+``` 
+### Logged in to pgAdmin
+
+**Username:** admin@example.com
+
+**Password:** admin
+
+### Confirm PostreSQL Server Accessibility
+
+**Added server with following configuration**
+
+General:
+- Name: Module 10
+
+Connection:
+- Host: db
+- Port: 5432
+- Database: fastapi_db
+- Username: postgres
+- Password: postgres
+
+**Checked under Servers -> Module 10 -> Databases to confirm database exists**
