@@ -70,6 +70,11 @@ jobs:
       
       - name: Build image
         run: docker build -t app:test .
+
+      - name: Verify setuptools version
+        run: |
+          docker run --rm --entrypoint python app:test -m pip show setuptools
+          docker run --rm --entrypoint sh app:test -c 'find /usr/local/lib -name "setuptools*.dist-info"'
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
