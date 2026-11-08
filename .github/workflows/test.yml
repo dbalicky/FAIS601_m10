@@ -39,7 +39,7 @@ jobs:
       
       - name: Install dependencies
         env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/mytestdb
+          DATABASE_URL: postgresql+psycopg2://user:password@localhost:5432/mytestdb
         run: |
           python -m venv venv
           source venv/bin/activate
@@ -49,7 +49,7 @@ jobs:
       
       - name: Run tests
         env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/mytestdb
+          DATABASE_URL: postgresql+psycopg2://user:password@localhost:5432/mytestdb
         run: |
           source venv/bin/activate
           

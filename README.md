@@ -276,3 +276,21 @@ docker compose exec web python --version
 docker compose exec web python -m pip show dnspython setuptools
 ```
 
+## Github Actions issue: ModuleNotFoundError: No module named 'psycopg'
+
+### Updated DATABASE_URLs to include psycopg2
+
+**Updated line in app/config.py**
+```python
+DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
+```
+
+**Updated line in .github/workflows/test.yml**
+```yml
+DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
+```
+
+**Updated lines in docker-compose.yml**
+```yml
+DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
+```
