@@ -72,9 +72,9 @@ deploy:
           ...
 ```
 
-# Testing with pgAdmin and PostreSQL
+# Testing
 
-## Accessing pgAdmin
+## Test with pgAdmin and PostreSQL
 
 ### Compose the image
 
@@ -115,3 +115,37 @@ Connection:
 - Password: postgres
 
 **Checked under Servers -> Module 10 -> Databases to confirm database exists**
+
+## Test with Pytest
+
+**Ran test to show detailed results for all code not covered**
+```bash
+pytest --cov=app --cov-report=term-missing -v
+```
+
+# Issues
+
+## Integration test failures
+
+### Value errors for test_user_auth tests
+```bash
+FAILED tests/integration/test_user_auth.py::test_password_hashing - ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+...
+...
+```
+
+**Update bcrypt version for better compatibility with passlib**
+
+```bash
+pip install bcrypt==4.0.1
+```
+
+### Run pytest for integration tests
+```bash
+pytest tests/integration/ -v
+```
+
+### Update bcrypt version in requirements.txt
+```txt
+bcrypt==4.0.1
+```
