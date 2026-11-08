@@ -47,3 +47,27 @@ git commit -m 'initial commit'
 
 git push -u origin main
 ```
+
+## Docker Setup
+
+### Create and Setup Docker Repository
+
+**Generated personal access tokens **
+
+**Added username and token as secrets to GitHub repo**
+
+**Updated tags in .gtibhu/workflows/test,yml with docker repo**
+```yml
+deploy:
+    ...
+    steps:
+      ...
+        with:
+          push: true
+          tags: |
+            dbal7/fais601_m10:latest
+            dbal7/fais601_m10:${{ github.sha }}
+          ...
+          cache-from: type=registry,ref=dbal7/fais601_m10:cache
+          ...
+```
