@@ -214,3 +214,65 @@ expect(page.locator('#result')).to_have_text('Result: 15')
 ```python
 expect(page.locator('#result')).to_have_text('Error: Cannot divide by zero!')
 ```
+
+## Trivy Security Issues
+
+### Fixing high severity issues with dependency version
+
+**Added and updated dependency versions for dnspython and setuptools in requirements.txt**
+```txt
+dnspython==2.9.0
+setuptools>=78.1.1
+```
+
+**Added correct dependency version installs in Dockerfile**
+```Dockerfile
+RUN apt-get update && \
+   ...
+   python -m pip install --no-cache-dir --upgrade pip "setuptools>=78.1.1" wheel && \
+   python -m pip install --no-cache-dir -r requirements.txt && \
+   ...
+```
+
+### IMPORTANT: COPY requirements.txt BEFORE installing dependencies
+```Dockerfile
+COPY requirements.txt .
+```
+
+### Upgrade Python version to 3.11
+
+**Changed version in Dockerfile**
+```Dockerfile
+FROM python:3.11-slim
+```
+
+**Changed version in .github/workflows/test.yml**
+```yml
+jobs:
+  test:
+    ...
+    steps:
+      ...
+        with:
+          python-version: '3.11'
+```
+
+### Rebuild and Test
+
+**Rebuilt image without using cache**
+```bash
+docker compose build --no-cache web
+```
+
+**Recreate FASTAPI container**
+```bash
+docker compose up -d --no-deps --force-recreate web
+```
+
+**Tested for updated python and dependency versions**
+```bash
+docker compose exec web python --version
+
+docker compose exec web python -m pip show dnspython setuptools
+```
+
