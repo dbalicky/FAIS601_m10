@@ -294,3 +294,36 @@ DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/fast
 ```yml
 DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_db"
 ```
+
+## Fixing issue with Trivy security not detecting up to date setuptools version
+
+### Add dependency verification to test.yml
+```yml
+- name: Verify setuptools version
+  run: |
+    docker run --rm --entrypoint python app:test -m pip show setuptools
+    docker run --rm --entrypoint sh app:test -c 'find /usr/local/lib -name "setuptools*.dist-info"'
+```
+
+### Create .dockerignore file
+
+**Added to .dockerignore**
+```txt
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.git/
+htmlcov/
+.coverage
+```
+
+### Add skip-files line to test.yml
+```yml
+name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          ...
+          skip-files: '**/pip/_vendor/bom.cdx.json'
+```
