@@ -72,6 +72,14 @@ deploy:
           ...
 ```
 
+## Docker Deployment
+
+### Rebuild up to date image if necessary
+```bash
+docker compose up -d --build
+```
+
+
 # Testing
 
 ## Test with pgAdmin and PostreSQL
@@ -148,4 +156,61 @@ pytest tests/integration/ -v
 ### Update bcrypt version in requirements.txt
 ```txt
 bcrypt==4.0.1
+```
+
+## E2E test failures
+
+**Getting following errors with test_e2e.py**
+```bash
+ERROR tests/e2e/test_e2e.py::test_hello_world - tests.conftest.ServerStartupError: Failed to start test server
+ERROR tests/e2e/test_e2e.py::test_calculator_add - tests.conftest.ServerStartupError: Failed to start test server
+ERROR tests/e2e/test_e2e.py::test_calculator_divide_by_zero - tests.conftest.ServerStartupError: Failed to start test server
+```
+
+### Check currently running containers
+```bash
+docker compose ps
+```
+
+**fastapi_calculator container was unhealthy**
+
+### Stop unhealthy container
+```bash
+docker compose stop web
+```
+
+### Fix code in main.py
+
+**Replaced:**
+```python
+@app.get("/")
+async def read_root(request: Request):
+    """
+    Serve the index.html template.
+    """
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html"
+    )
+```
+
+## Assertion Errors
+
+**Got following errors after running pytest --cov=app --cov-report=term-missing -v**
+
+### Replace with fixed code in test_e2e.py
+
+**Added expect import from playwright**
+```python
+from playwright.sync_api import expect
+```
+
+**Fixed expected result line in test_calculator_add**
+```python
+expect(page.locator('#result')).to_have_text('Result: 15')
+```
+
+**Fixed expected result line in test_calculator_divide_by_zero**
+```python
+expect(page.locator('#result')).to_have_text('Error: Cannot divide by zero!')
 ```
